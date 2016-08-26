@@ -9,4 +9,5 @@ install:
 
 script:
   - cd pronto_feedback
+  - python manage.py migrate
   - python manage.py test
