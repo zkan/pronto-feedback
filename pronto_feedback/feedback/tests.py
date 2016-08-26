@@ -1,5 +1,6 @@
 import datetime
 
+from django.contrib.auth.models import User
 from django.utils import timezone
 from django.test import TestCase
 
@@ -25,3 +26,14 @@ class FeedbackTest(TestCase):
         self.assertEqual(feedback.last_modification_date, some_date)
         self.assertEqual(feedback.question_asked, "What's on your mind?")
         self.assertEqual(feedback.message, "I'm happy")
+
+
+class FeedbackAdminTest(TestCase):
+    def test_access_feedback_admin(self):
+        User.objects.create_superuser('admin', 'admin@pronto.com', 'admin')
+        self.client.login(username='admin', password='admin')
+
+        url = '/admin/feedback/feedback/'
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
