@@ -17,5 +17,5 @@ class Feedback(models.Model):
         blank=True
     )
     question_asked = models.TextField()
-    message = models.TextField()
+    message = models.TextField(blank=True)
     tags = TaggableManager(blank=True)
