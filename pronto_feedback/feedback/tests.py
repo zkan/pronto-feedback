@@ -1,6 +1,7 @@
 import datetime
 
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from django.utils import timezone
 from django.test import TestCase
 
@@ -31,6 +32,15 @@ class FeedbackTest(TestCase):
         self.assertEqual(feedback.question_asked, "What's on your mind?")
         self.assertEqual(feedback.message, "I'm happy")
         self.assertEqual(feedback.tags.latest('id').name, 'Suggestion Box')
+
+
+class FeedbackViewTest(TestCase):
+    def test_access_feedback_index_page(self):
+        url = reverse('feedback')
+        response = self.client.get(url)
+
+        expected = '<h1>Feedback</h1>'
+        self.assertContains(response, expected, status_code=200)
 
 
 class FeedbackAdminTest(TestCase):
