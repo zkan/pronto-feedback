@@ -48,15 +48,15 @@ class FeedbackViewTest(TestCase):
         response = self.client.get(self.url)
 
         expected = '<th width="20%">Feedback ID</th>'
-        self.assertContains(response, expected, status_code=200)
-        expected = '<th>Message</th>'
-        self.assertContains(response, expected, status_code=200)
-        expected = '<th width="20%">Tags</th>'
+        expected += '<th>Question Asked</th>'
+        expected += '<th>Message</th>'
+        expected += '<th width="20%">Tags</th>'
         self.assertContains(response, expected, status_code=200)
 
     def test_feedback_page_should_show_feedback_data(self):
         feedback = Feedback.objects.create(
             fid='57504457a6cca38a00cfb4f88',
+            question_asked='How are you today?',
             message="I'm happy",
         )
         suggestion_box_tag = Tag.objects.create(name='Suggestion Box')
@@ -67,6 +67,7 @@ class FeedbackViewTest(TestCase):
         response = self.client.get(self.url)
 
         expected = '<td>57504457a6cca38a00cfb4f88</td>'
+        expected += '<td>How are you today?</td>'
         expected += '<td>I&#39;m happy</td>'
         expected += '<td><span class="label label-info">Suggestion Box</span>'
         expected += '&nbsp;<span class="label label-info">good</span>&nbsp;'
