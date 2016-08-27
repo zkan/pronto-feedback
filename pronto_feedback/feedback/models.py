@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 from django.db import models
 from django.utils import timezone
 
+from taggit.managers import TaggableManager
+
 
 class Feedback(models.Model):
     fid = models.CharField(max_length=50)
@@ -16,3 +18,4 @@ class Feedback(models.Model):
     )
     question_asked = models.TextField()
     message = models.TextField()
+    tags = TaggableManager(blank=True)
