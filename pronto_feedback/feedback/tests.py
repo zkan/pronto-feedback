@@ -47,7 +47,7 @@ class FeedbackViewTest(TestCase):
     def test_feedback_page_should_have_feedback_table(self):
         response = self.client.get(self.url)
 
-        expected = '<th width="15%">Feedback ID</th>'
+        expected = '<th width="20%">Feedback ID</th>'
         self.assertContains(response, expected, status_code=200)
         expected = '<th>Message</th>'
         self.assertContains(response, expected, status_code=200)
