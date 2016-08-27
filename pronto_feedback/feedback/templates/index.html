@@ -13,11 +13,21 @@
             <div class="col-md-12">
                 <table class="table table-hover">
                     <thead>
-                        <th>Feedback ID</th>
+                        <th width="15%">Feedback ID</th>
                         <th>Message</th>
-                        <th>Tags</th>
+                        <th width="20%">Tags</th>
                     </thead>
                     <tbody>
+                    {% for each in feedback %}
+                    {% spaceless %}
+                        <tr>
+                            <td>{{ each.fid }}</td>
+                            <td>{{ each.message }}</td>
+                            <td>{% for each_tag in each.tags.names %}<span class="label label-info">{{ each_tag }}</span>&nbsp;{% endfor %}
+                            </td>
+                        </tr>
+                    {% endspaceless %}
+                    {% endfor %}
                     </tbody>
                 </table>
             </div>
