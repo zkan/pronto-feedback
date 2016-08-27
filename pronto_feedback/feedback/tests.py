@@ -35,11 +35,23 @@ class FeedbackTest(TestCase):
 
 
 class FeedbackViewTest(TestCase):
+    def setUp(self):
+        self.url = reverse('feedback')
+
     def test_access_feedback_index_page(self):
-        url = reverse('feedback')
-        response = self.client.get(url)
+        response = self.client.get(self.url)
 
         expected = '<h1>Feedback</h1>'
+        self.assertContains(response, expected, status_code=200)
+
+    def test_feedback_page_should_have_feedback_table(self):
+        response = self.client.get(self.url)
+
+        expected = '<th>Feedback ID</th>'
+        self.assertContains(response, expected, status_code=200)
+        expected = '<th>Message</th>'
+        self.assertContains(response, expected, status_code=200)
+        expected = '<th>Tags</th>'
         self.assertContains(response, expected, status_code=200)
 
 
