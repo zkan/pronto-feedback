@@ -2,11 +2,13 @@ import datetime
 
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from django.forms.fields import FileField
 from django.utils import timezone
 from django.test import TestCase
 
 from taggit.models import Tag
 
+from .forms import FeedbackUploadForm
 from .models import Feedback
 
 
@@ -72,6 +74,26 @@ class FeedbackViewTest(TestCase):
         expected += '<td><span class="label label-info">Suggestion Box</span>'
         expected += '&nbsp;<span class="label label-info">good</span>&nbsp;'
         self.assertContains(response, expected, status_code=200)
+
+
+class FeedbackUploadFormTest(TestCase):
+    def setUp(self):
+        self.form = FeedbackUploadForm()
+
+    def test_feedback_upload_form_should_have_all_defined_fields(self):
+        expected_fields = [
+            'file_upload'
+        ]
+        for each in expected_fields:
+            self.assertTrue(each in self.form.fields)
+
+        self.assertEqual(len(self.form.fields), 1)
+
+    def test_feedback_upload_form_should_file_field(self):
+        self.assertIsInstance(
+            self.form.fields['file_upload'],
+            FileField
+        )
 
 
 class FeedbackAdminTest(TestCase):
