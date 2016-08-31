@@ -2,7 +2,7 @@ import datetime
 
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from django.forms.fields import FileField
+from django import forms
 from django.utils import timezone
 from django.test import TestCase
 
@@ -92,7 +92,18 @@ class FeedbackUploadFormTest(TestCase):
     def test_feedback_upload_form_should_file_field(self):
         self.assertIsInstance(
             self.form.fields['file_upload'],
-            FileField
+            forms.fields.FileField
+        )
+
+    def test_form_should_use_file_input_widget_with_form_control_class(self):
+        self.assertIsInstance(
+            self.form.fields['file_upload'].widget,
+            forms.FileInput
+        )
+
+        self.assertEqual(
+            self.form.fields['file_upload'].widget.attrs,
+            {'class': 'form-control'}
         )
 
 
