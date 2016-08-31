@@ -46,6 +46,17 @@ class FeedbackViewTest(TestCase):
         expected = '<h1>Feedback</h1>'
         self.assertContains(response, expected, status_code=200)
 
+    def test_feedback_page_should_have_upload_form(self):
+        response = self.client.get(self.url)
+
+        expected = '<form action="." method="post">'
+        self.assertContains(response, expected, status_code=200)
+        expected = '<label for="file_upload">Select CSV File:</label>'
+        self.assertContains(response, expected, status_code=200)
+        expected = '<input class="form-control" id="id_file_upload" '
+        expected += 'name="file_upload" type="file" required />'
+        self.assertContains(response, expected, status_code=200)
+
     def test_feedback_page_should_have_feedback_table(self):
         response = self.client.get(self.url)
 
