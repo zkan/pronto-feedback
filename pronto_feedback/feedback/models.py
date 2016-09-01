@@ -12,10 +12,6 @@ class Feedback(models.Model):
         default=timezone.now,
         blank=True
     )
-    last_modification_date = models.DateTimeField(
-        default=timezone.now,
-        blank=True
-    )
     question_asked = models.TextField()
     message = models.TextField(blank=True)
     tags = TaggableManager(blank=True)

@@ -16,7 +16,6 @@ class FeedbackTest(TestCase):
         feedback = Feedback()
         feedback.fid = '57504457a6cca38a00cfb4f88'
         feedback.creation_date = some_date
-        feedback.last_modification_date = some_date
         feedback.question_asked = "What's on your mind?"
         feedback.message = "I'm happy"
         feedback.save()
@@ -26,7 +25,6 @@ class FeedbackTest(TestCase):
 
         self.assertEqual(feedback.fid, '57504457a6cca38a00cfb4f88')
         self.assertEqual(feedback.creation_date, some_date)
-        self.assertEqual(feedback.last_modification_date, some_date)
         self.assertEqual(feedback.question_asked, "What's on your mind?")
         self.assertEqual(feedback.message, "I'm happy")
         self.assertEqual(feedback.tags.latest('id').name, 'Suggestion Box')
