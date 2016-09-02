@@ -36,7 +36,7 @@ class FeedbackUploadFormTest(TestCase):
         )
 
     def test_form_should_be_able_to_upload_file(self):
-        upload_file = open('tests/test_data.csv', 'r')
+        upload_file = open('tests/test_data.csv', 'rb')
         post_dict = {}
         file_dict = {
             'file_upload': SimpleUploadedFile(
