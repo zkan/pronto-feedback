@@ -68,7 +68,7 @@ class FeedbackViewTest(TestCase):
             'file_upload': file_upload
         }
 
-        self.client.post(self.url, data=data)
+        response = self.client.post(self.url, data=data)
 
         feedback = Feedback.objects.latest('id')
         self.assertEqual(feedback.fid, '57bd22d66706c30f00ad7xxx')
@@ -76,3 +76,15 @@ class FeedbackViewTest(TestCase):
         self.assertEqual(feedback.creation_date, creation_date)
         self.assertEqual(feedback.question_asked, "What's on your mind?")
         self.assertEqual(feedback.message, 'I like frozen blueberries!')
+
+        expected = '<td>57bd22d66706c30f00ad7xxx</td>'
+        expected += '<td>What&#39;s on your mind?</td>'
+        expected += '<td>I like frozen blueberries!</td>'
+        expected += '<td></td>'
+        self.assertContains(response, expected, status_code=200)
+
+    def test_feedback_page_should_not_save_data_if_form_is_invalid(self):
+        self.client.post(self.url)
+
+        count = Feedback.objects.count()
+        self.assertEqual(count, 0)
