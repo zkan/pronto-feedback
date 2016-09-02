@@ -19,7 +19,10 @@ class FeedbackViewTest(TestCase):
     def test_feedback_page_should_have_upload_form(self):
         response = self.client.get(self.url)
 
-        expected = '<form action="." method="post">'
+        expected = '<form action="." method="post" '
+        expected += 'enctype="multipart/form-data">'
+        self.assertContains(response, expected, status_code=200)
+        expected = "<input type='hidden' name='csrfmiddlewaretoken'"
         self.assertContains(response, expected, status_code=200)
         expected = '<label for="file_upload">Select CSV File:</label>'
         self.assertContains(response, expected, status_code=200)
