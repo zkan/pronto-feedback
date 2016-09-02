@@ -1,3 +1,4 @@
+import csv
 from datetime import datetime
 
 from django.shortcuts import render
@@ -26,17 +27,16 @@ class FeedbackView(TemplateView):
         )
 
     def save_feedback(self, data):
-        each = data.split(',')
         creation_date = datetime.strptime(
-            each[2],
+            data[2],
             '%m/%d/%Y %H:%M'
         ).replace(tzinfo=timezone.utc)
 
         Feedback.objects.create(
-            fid=each[0],
+            fid=data[0],
             creation_date=creation_date,
-            question_asked=each[4],
-            message=each[5]
+            question_asked=data[4],
+            message=data[5]
         )
 
     def post(self, request):
@@ -45,8 +45,9 @@ class FeedbackView(TemplateView):
         form = FeedbackUploadForm(request.POST, request.FILES)
 
         if form.is_valid():
-            data = request.FILES['file_upload'].readlines()[1:]
-            map(self.save_feedback, data)
+            reader = csv.reader(request.FILES['file_upload'])
+            next(reader, None)
+            map(self.save_feedback, reader)
 
         return render(
             request,
