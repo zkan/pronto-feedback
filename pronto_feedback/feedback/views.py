@@ -46,7 +46,7 @@ class FeedbackView(TemplateView):
 
         if form.is_valid():
             reader = csv.reader(request.FILES['file_upload'])
-            next(reader, None)
+            reader.next()
             map(self.save_feedback, reader)
 
         return render(
