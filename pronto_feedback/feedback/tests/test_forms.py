@@ -1,4 +1,5 @@
 from django import forms
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 
 from ..forms import FeedbackUploadForm
@@ -33,3 +34,17 @@ class FeedbackUploadFormTest(TestCase):
             self.form.fields['file_upload'].widget.attrs,
             {'class': 'form-control'}
         )
+
+    def test_form_should_be_able_to_upload_file(self):
+        upload_file = open('tests/test_data.csv', 'r')
+        post_dict = {}
+        file_dict = {
+            'file_upload': SimpleUploadedFile(
+                upload_file.name,
+                upload_file.read()
+            )
+        }
+
+        form = FeedbackUploadForm(post_dict, file_dict)
+
+        self.assertTrue(form.is_valid())
