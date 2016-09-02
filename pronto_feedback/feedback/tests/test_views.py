@@ -1,5 +1,8 @@
+from datetime import datetime
+
 from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.utils import timezone
 
 from taggit.models import Tag
 
@@ -19,7 +22,10 @@ class FeedbackViewTest(TestCase):
     def test_feedback_page_should_have_upload_form(self):
         response = self.client.get(self.url)
 
-        expected = '<form action="." method="post">'
+        expected = '<form action="." method="post" '
+        expected += 'enctype="multipart/form-data">'
+        self.assertContains(response, expected, status_code=200)
+        expected = "<input type='hidden' name='csrfmiddlewaretoken'"
         self.assertContains(response, expected, status_code=200)
         expected = '<label for="file_upload">Select CSV File:</label>'
         self.assertContains(response, expected, status_code=200)
@@ -55,3 +61,30 @@ class FeedbackViewTest(TestCase):
         expected += '<td><span class="label label-info">Suggestion Box</span>'
         expected += '&nbsp;<span class="label label-info">good</span>&nbsp;'
         self.assertContains(response, expected, status_code=200)
+
+    def test_feedback_page_should_save_data_from_uploaded_csv_file(self):
+        file_upload = open('tests/test_data.csv', 'rb')
+        data = {
+            'file_upload': file_upload
+        }
+
+        response = self.client.post(self.url, data=data)
+
+        feedback = Feedback.objects.latest('id')
+        self.assertEqual(feedback.fid, '57bd22d66706c30f00ad7xxx')
+        creation_date = datetime(2016, 8, 24, 11, 30, 0, tzinfo=timezone.utc)
+        self.assertEqual(feedback.creation_date, creation_date)
+        self.assertEqual(feedback.question_asked, "What's on your mind?")
+        self.assertEqual(feedback.message, 'I like frozen blueberries!')
+
+        expected = '<td>57bd22d66706c30f00ad7xxx</td>'
+        expected += '<td>What&#39;s on your mind?</td>'
+        expected += '<td>I like frozen blueberries!</td>'
+        expected += '<td></td>'
+        self.assertContains(response, expected, status_code=200)
+
+    def test_feedback_page_should_not_save_data_if_form_is_invalid(self):
+        self.client.post(self.url)
+
+        count = Feedback.objects.count()
+        self.assertEqual(count, 0)
