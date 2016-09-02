@@ -1,5 +1,8 @@
+from datetime import datetime
+
 from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.utils import timezone
 
 from taggit.models import Tag
 
@@ -58,3 +61,18 @@ class FeedbackViewTest(TestCase):
         expected += '<td><span class="label label-info">Suggestion Box</span>'
         expected += '&nbsp;<span class="label label-info">good</span>&nbsp;'
         self.assertContains(response, expected, status_code=200)
+
+    def test_feedback_page_should_save_data_from_uploaded_csv_file(self):
+        file_upload = open('tests/test_data.csv', 'rb')
+        data = {
+            'file_upload': file_upload
+        }
+
+        self.client.post(self.url, data=data)
+
+        feedback = Feedback.objects.latest('id')
+        self.assertEqual(feedback.fid, '57bd22d66706c30f00ad7xxx')
+        creation_date = datetime(2016, 8, 24, 11, 30, 0, tzinfo=timezone.utc)
+        self.assertEqual(feedback.creation_date, creation_date)
+        self.assertEqual(feedback.question_asked, "What's on your mind?")
+        self.assertEqual(feedback.message, 'I like frozen blueberries!')
